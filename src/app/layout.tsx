@@ -1,13 +1,7 @@
 import './globals.css'
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
-
-export const metadata: Metadata = {
-  title: 'QR Contact',
-  description: 'Manage your contacts with QR codes',
-}
+import { AuthProvider } from '@/context/AuthContext'
+import AuthWrapper from '@/components/AuthWrapper'
+import Navbar from '@/components/Navbar'
 
 export default function RootLayout({
   children,
@@ -16,7 +10,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <body className={inter.className}>{children}</body>
+      <body className='min-h-screen flex flex-col'>
+        <AuthProvider>
+          <Navbar />
+          <main className='flex-grow container mx-auto px-4 py-8 mt-16'>
+            <AuthWrapper>{children}</AuthWrapper>
+          </main>
+        </AuthProvider>
+      </body>
     </html>
   )
 }
