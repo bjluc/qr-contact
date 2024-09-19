@@ -2,6 +2,7 @@ import { ContactForm } from '@/components/ContactForm'
 import DashboardSidebar from '@/components/DashboardSidebar'
 
 export default function AddContactPage() {
+  console.log('Contact creation file loaded')
   return (
     <div className='flex h-screen overflow-hidden'>
       <DashboardSidebar />

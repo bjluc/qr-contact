@@ -17,11 +17,21 @@ export async function generateQRCode(userId: string): Promise<string> {
   }
 }
 
-export async function generateContactQRCode(data: string): Promise<string> {
+export async function generateContactQRCode(
+  contactId: string
+): Promise<string> {
   try {
-    return await QRCode.toDataURL(data)
+    const baseUrl = process.env.NEXT_PUBLIC_QR_CODE_BASE_URL
+    if (!baseUrl) {
+      throw new Error(
+        'NEXT_PUBLIC_QR_CODE_BASE_URL is not set in environment variables'
+      )
+    }
+    const url = `${baseUrl}/contacts/${contactId}`
+    const qrCodeDataUrl = await QRCode.toDataURL(url)
+    return qrCodeDataUrl
   } catch (error) {
     console.error('Error generating contact QR code:', error)
-    return 'https://placehold.co/200x200?text=QR+Generation+Failed'
+    throw error
   }
 }

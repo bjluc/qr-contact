@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -5,16 +7,15 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Phone, Mail, MapPin, Linkedin, Twitter, Download } from 'lucide-react'
-//import QRCode from 'qrcode.react'
-import { QRCodeSVG } from 'qrcode.react'
 
-type ContactCardProps = {
+interface ContactCardProps {
   name: string
-  jobTitle: string
-  phone: string
-  email: string
-  location: string
+  jobTitle?: string
+  phone?: string
+  email?: string
+  location?: string
   avatarUrl?: string
+  qr: string
 }
 
 export function ContactCard({
@@ -24,10 +25,8 @@ export function ContactCard({
   email,
   location,
   avatarUrl,
+  qr,
 }: ContactCardProps) {
-  const contactInfo = { name, jobTitle, phone, email, location }
-  const qrCodeValue = JSON.stringify(contactInfo)
-
   return (
     <Card className='w-full max-w-md mx-auto'>
       <CardHeader className='text-center'>
@@ -45,21 +44,27 @@ export function ContactCard({
       </CardHeader>
       <CardContent className='space-y-4'>
         <div className='flex justify-center'>
-          <QRCodeSVG value={qrCodeValue} size={200} />
+          {qr && <img src={qr} alt='Contact QR Code' className='w-48 h-48' />}
         </div>
         <div className='space-y-2'>
-          <div className='flex items-center space-x-2'>
-            <Phone className='w-4 h-4' />
-            <span>{phone}</span>
-          </div>
-          <div className='flex items-center space-x-2'>
-            <Mail className='w-4 h-4' />
-            <span>{email}</span>
-          </div>
-          <div className='flex items-center space-x-2'>
-            <MapPin className='w-4 h-4' />
-            <span>{location}</span>
-          </div>
+          {phone && (
+            <div className='flex items-center space-x-2'>
+              <Phone className='w-4 h-4' />
+              <span>{phone}</span>
+            </div>
+          )}
+          {email && (
+            <div className='flex items-center space-x-2'>
+              <Mail className='w-4 h-4' />
+              <span>{email}</span>
+            </div>
+          )}
+          {location && (
+            <div className='flex items-center space-x-2'>
+              <MapPin className='w-4 h-4' />
+              <span>{location}</span>
+            </div>
+          )}
         </div>
         <div className='space-y-2'>
           <Label htmlFor='notes'>Notes</Label>

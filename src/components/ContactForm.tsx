@@ -1,11 +1,11 @@
 'use client'
 import { useState } from 'react'
 import { useAuth } from '@/context/AuthContext'
-import { createClient } from '@/lib/supabaseClient'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'react-toastify'
+import { createContact, ContactData } from '@/lib/contacts'
 
 export function ContactForm() {
   const { user } = useAuth()
@@ -16,27 +16,32 @@ export function ContactForm() {
   const [location, setLocation] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
   const [notes, setNotes] = useState('')
-  const [contactType, setContactType] = useState('personal')
+  const [contactType, setContactType] = useState<'personal' | 'business'>(
+    'personal'
+  )
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const supabase = createClient()
+
+    if (!user) {
+      toast.error('You must be logged in to create a contact.')
+      return
+    }
+
+    const contactData: ContactData = {
+      user_id: user.id,
+      name,
+      job_title: jobTitle,
+      phone,
+      email,
+      location,
+      avatar_url: avatarUrl,
+      notes,
+      contact_type: contactType,
+    }
 
     try {
-      const { data, error } = await supabase.from('contacts').insert({
-        user_id: user?.id,
-        name,
-        job_title: jobTitle,
-        phone,
-        email,
-        location,
-        avatar_url: avatarUrl,
-        notes,
-        contact_type: contactType,
-      })
-
-      if (error) throw error
-
+      await createContact(contactData)
       toast.success('Contact added successfully!')
       // Reset form fields
       setName('')
@@ -129,7 +134,9 @@ export function ContactForm() {
           <select
             id='contactType'
             value={contactType}
-            onChange={(e) => setContactType(e.target.value)}
+            onChange={(e) =>
+              setContactType(e.target.value as 'personal' | 'business')
+            }
             className='w-full p-2 border border-gray-300 rounded-md'
           >
             <option value='personal'>Personal</option>
