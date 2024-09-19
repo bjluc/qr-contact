@@ -2,9 +2,17 @@ import { useRouter } from 'next/navigation'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
+import { generateQRCode } from '@/utils/qrCode'
 
+interface AuthUser extends User {
+  user_metadata: {
+    first_name?: string
+  }
+}
+
+// Keep this as a named export
 export function useAuth() {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
   const supabase = createClientComponentClient()
   const router = useRouter()
@@ -42,23 +50,34 @@ export function useAuth() {
     email: string,
     password: string,
     firstName: string,
-    lastName: string
+    lastName: string,
+    phone: string
   ) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          first_name: firstName,
-          last_name: lastName,
-        },
-      },
-    })
-    if (error) throw error
-    if (data.user) {
-      await createProfile(data.user)
+    try {
+      const { data, error } = await supabase.auth.signUp({ email, password })
+      if (error) throw error
+
+      if (data.user) {
+        const qrCode = await generateQRCode(data.user.id)
+        const { error: profileError } = await supabase.from('profiles').insert([
+          {
+            id: data.user.id,
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+            phone: phone,
+            qr_code: qrCode,
+          },
+        ])
+
+        if (profileError) throw profileError
+      }
+
+      return data
+    } catch (error) {
+      console.error('Signup error:', error)
+      throw error
     }
-    router.push('/dashboard')
   }
 
   const logout = async () => {
@@ -91,7 +110,7 @@ export function useAuth() {
   }
 
   return {
-    user,
+    user, // Make sure this is included
     loading,
     login,
     signup,

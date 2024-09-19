@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
 
 interface LoginFormProps {
   onSuccessfulLogin: () => void
@@ -26,13 +27,16 @@ export default function LoginForm({ onSuccessfulLogin }: LoginFormProps) {
     setError(null)
     try {
       await login(email, password)
+      toast.success('Logged in successfully!')
       router.push('/dashboard')
     } catch (error) {
       console.error('Login failed:', error)
       if (error instanceof Error) {
         setError(error.message)
+        toast.error(error.message)
       } else {
         setError('An unknown error occurred')
+        toast.error('An unknown error occurred')
       }
     } finally {
       setIsLoading(false)

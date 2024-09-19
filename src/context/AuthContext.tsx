@@ -1,24 +1,25 @@
 'use client'
 
-import React, { createContext, useContext, useState, useEffect } from 'react'
-import { useAuth as useAuthHook } from '@/hooks/useAuth'
+import React, { createContext, useContext } from 'react'
+import { useAuth } from '@/hooks/useAuth'
 
-const AuthContext = createContext<ReturnType<typeof useAuthHook> | undefined>(
+const AuthContext = createContext<ReturnType<typeof useAuth> | undefined>(
   undefined
 )
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const auth = useAuthHook()
+  const auth = useAuth()
 
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>
 }
 
-export const useAuth = () => {
+export const useAuthContext = () => {
   const context = useContext(AuthContext)
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error('useAuthContext must be used within an AuthProvider')
   }
   return context
 }
+export { useAuth }

@@ -6,4 +6,5 @@ module.exports = {
     maxInactiveAge: 0,
     pagesBufferLength: 0,
   },
+  productionBrowserSourceMaps: false,
 }

@@ -1,7 +1,8 @@
 import './globals.css'
 import { AuthProvider } from '@/context/AuthContext'
-import AuthWrapper from '@/components/AuthWrapper'
 import Navbar from '@/components/Navbar'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function RootLayout({
   children,
@@ -13,9 +14,23 @@ export default function RootLayout({
       <body className='min-h-screen flex flex-col'>
         <AuthProvider>
           <Navbar />
-          <main className='flex-grow container mx-auto px-4 py-8 mt-16'>
-            <AuthWrapper>{children}</AuthWrapper>
+          <main className='flex-grow pt-16 overflow-x-hidden'>
+            {' '}
+            {/* Added overflow-x-hidden */}
+            {children}
           </main>
+          <ToastContainer
+            position='bottom-right'
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme='light'
+          />
         </AuthProvider>
       </body>
     </html>

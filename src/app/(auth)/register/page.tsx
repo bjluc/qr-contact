@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
-import RegisterForm from '@/components/RegisterForm'
+import { RegisterForm } from '@/components/RegisterForm'
 import {
   Card,
   CardContent,
