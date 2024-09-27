@@ -5,9 +5,16 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'react-toastify'
-import { createContact, ContactData } from '@/lib/contacts'
+import { createContact, Contact } from '@/lib/contacts'
+import { useRouter } from 'next/navigation'
 
+// Update the ContactData type
+type ContactData = Omit<
+  Contact,
+  'id' | 'user_id' | 'qr' | 'created_at' | 'updated_at'
+>
 export function ContactForm() {
+  const router = useRouter()
   const { user } = useAuth()
   const [name, setName] = useState('')
   const [jobTitle, setJobTitle] = useState('')
@@ -28,8 +35,7 @@ export function ContactForm() {
       return
     }
 
-    const contactData: ContactData = {
-      user_id: user.id,
+    const contactData: Omit<ContactData, 'user_id'> = {
       name,
       job_title: jobTitle,
       phone,
@@ -52,6 +58,9 @@ export function ContactForm() {
       setAvatarUrl('')
       setNotes('')
       setContactType('personal')
+
+      // Redirect to the contacts list page
+      router.push('/contacts')
     } catch (error) {
       console.error('Error adding contact:', error)
       toast.error('Failed to add contact. Please try again.')
