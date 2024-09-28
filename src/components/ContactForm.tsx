@@ -1,23 +1,25 @@
 'use client'
+import React from 'react'
 import { useState } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'react-toastify'
-import { createContact, Contact } from '@/lib/contacts'
+import { createContact, ContactData } from '@/lib/contacts'
 import { useRouter } from 'next/navigation'
+import { Contact } from '@/types'
+// Update the ContactForm component definition
+interface ContactFormProps {
+  initialData?: Contact
+  onSubmit?: (contact: Contact) => void
+}
 
-// Update the ContactData type
-type ContactData = Omit<
-  Contact,
-  'id' | 'user_id' | 'qr' | 'created_at' | 'updated_at'
->
-export function ContactForm() {
+const ContactForm: React.FC<ContactFormProps> = ({ initialData, onSubmit }) => {
   const router = useRouter()
   const { user } = useAuth()
-  const [name, setName] = useState('')
-  const [jobTitle, setJobTitle] = useState('')
+  const [name, setName] = useState(initialData?.name || '')
+  const [jobTitle, setJobTitle] = useState(initialData?.job_title || '')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [location, setLocation] = useState('')
@@ -162,3 +164,5 @@ export function ContactForm() {
     </form>
   )
 }
+
+export default ContactForm

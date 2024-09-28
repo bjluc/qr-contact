@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { supabase } from '@/lib/supabaseClient'
+import { Profile } from '@/types'
 
 interface UserProfile {
   id: string

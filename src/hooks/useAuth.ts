@@ -7,6 +7,7 @@ import { generateQRCode } from '@/utils/qrCode'
 interface AuthUser extends User {
   user_metadata: {
     first_name?: string
+    // Add any other metadata fields you expect
   }
 }
 
@@ -110,12 +111,12 @@ export function useAuth() {
   }
 
   return {
-    user, // Make sure this is included
+    user: user as AuthUser | null,
     loading,
     login,
     signup,
     logout,
     resetPassword,
-    createProfile, // Add this line
+    createProfile,
   }
 }

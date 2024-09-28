@@ -55,8 +55,23 @@ export async function createContact(
   if (error) throw error
   return data[0]
 }
-
 // Make sure the deleteContact function is exported
 export async function deleteContact(id: string) {
   // Implementation of deleteContact
+}
+
+export async function updateContact(
+  id: string,
+  contactData: Partial<ContactData>
+): Promise<Contact> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .from('contacts')
+    .update(contactData)
+    .eq('id', id)
+    .single()
+
+  if (error) throw error
+  return data
 }

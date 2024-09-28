@@ -1,14 +1,11 @@
+import DashboardLayout from '@/components/DashboardLayout'
 import { ContactList } from '@/components/ContactList'
-import DashboardSidebar from '@/components/DashboardSidebar'
 
-export default function Contacts() {
+export default function ContactListPage() {
   return (
-    <div className='flex h-[calc(100vh-64px)]'>
-      <DashboardSidebar />
-      <div className='flex-grow p-6 ml-64 overflow-y-auto'>
-        <h1 className='text-2xl font-bold mb-6'>Your Contacts</h1>
-        <ContactList />
-      </div>
-    </div>
+    <DashboardLayout>
+      <h1 className='text-2xl font-bold mb-4'>My Contacts</h1>
+      <ContactList />
+    </DashboardLayout>
   )
 }

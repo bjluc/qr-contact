@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 
 interface LoginFormProps {
-  onSuccessfulLogin: () => void
+  onSuccessfulLogin?: () => void // Make this prop optional
 }
 
 export default function LoginForm({ onSuccessfulLogin }: LoginFormProps) {
@@ -40,6 +40,9 @@ export default function LoginForm({ onSuccessfulLogin }: LoginFormProps) {
       }
     } finally {
       setIsLoading(false)
+    }
+    if (onSuccessfulLogin) {
+      onSuccessfulLogin()
     }
   }
 
